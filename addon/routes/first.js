@@ -1,7 +1,10 @@
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
+import { getOwner } from '@ember/application';
 export default class First extends Route {
   @inject hostRouter;
+  @inject('-routing') internalRouter;
+
   // Assertion Failed: Attempting to inject an unknown injection: 'service:router'
   // @inject router;
 
@@ -16,6 +19,14 @@ export default class First extends Route {
     // this.router.transitionTo('second');
 
     // Works but breaks the engine encapsulation as you need to understand how the engine is mounted in its parent
-    this.hostRouter.transitionTo('engine-demo.second');
+    // this.hostRouter.transitionTo('engine-demo.second');
+
+    // Works but uses internal router service.
+    this.internalRouter.transitionTo(
+      `${getOwner(this).mountPoint}.second`,
+      [],
+      {},
+      false,
+    );
   }
 }
